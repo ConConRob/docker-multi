@@ -13,6 +13,13 @@ after_success:
   - docker build -t conconrob/multi-nginx ./nginx
   - docker build -t conconrob/multi-server ./server
   - docker build -t conconrob/multi-worker ./worker
+  # login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" -- password-stdin
+  # take those images and push to docker hub
+  - docker push conconrob/multi-client
+  - docker push conconrob/multi-nginx
+  - docker push conconrob/multi-server
+  - docker push conconrob/multi-worker
 deploy:
   provider: elasticbeanstalk
   region: 'us-west-2'
