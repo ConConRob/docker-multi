@@ -31,7 +31,7 @@ const redis = require('redis');
 const redisClient = redis.createClient({
   host: keys.redisHost,
   port: keys.redisPort,
-  retry_strategy: () => 1000, //retry every second
+  retry_strategy: () => 1000, //ret ry every second
 });
 
 const redisPublisher = redisClient.duplicate();

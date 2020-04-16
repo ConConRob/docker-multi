@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t conconrob/react-test -f ./client/Dockerfile.dev .
+
+script:
+  - docker run -e CI=true conconrob/react-test npm run test
+
+after_success:
+  - docker build -t conconrob/multi-client ./client
+  - docker build -t conconrob/multi-nginx ./nginx
+  - docker build -t conconrob/multi-server ./server
+  - docker build -t conconrob/multi-worker ./worker
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-west-2'
+  app: 'docker'
+  env: 'Docker-env'
+  bucket_name: 'elasticbeanstalk-us-west-2...'
+  bucket_path: 'docker'
+  on:
+    branch: 'master'
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
